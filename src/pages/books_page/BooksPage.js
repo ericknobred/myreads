@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 
 import * as BooksAPI from '../../BooksAPI'
 import CustomLoader from '../components/CustomLoader'
-
+import Display from '../components/Display'
 import ViewDescriptionModal from './ViewDescriptionModal'
-import Shelfs from './Shelfs'
+
 
 const shelfsDisplay = [
     'currentlyReading',
@@ -77,7 +77,7 @@ export default class BooksPage extends Component {
                     </div>
                     <div className="list-books-content">
                         <div>
-                            <Shelfs books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} updateShelf={this.updateShelf} />
+                            <Display books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} updateShelf={this.updateShelf} />
                         </div>
                     </div>
                     <div className="open-search">
