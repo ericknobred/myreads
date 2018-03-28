@@ -54,6 +54,18 @@ export default class BooksPage extends Component {
         )
     }
 
+    updateShelf = (book, shelf) => {
+        this.setState({isLoading:true}) 
+        BooksAPI.update(book, shelf).then(() => {
+            let newBooks = this.state.books.map(item => {
+                if(item.id === book.id)
+                    item.shelf = shelf
+                return item
+            })        
+            this.setState({books: newBooks,isLoading:false})
+        })        
+    }
+
     render() {
         
         return (
@@ -65,7 +77,7 @@ export default class BooksPage extends Component {
                     </div>
                     <div className="list-books-content">
                         <div>
-                            <Shelfs books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} />
+                            <Shelfs books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} updateShelf={this.updateShelf} />
                         </div>
                     </div>
                     <div className="open-search">
