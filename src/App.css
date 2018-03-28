@@ -182,17 +182,6 @@ body, .app {
   font-size: 0.8em;
 }
 
-
-.loader {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(255,255,255,0.4);
-  z-index: 9999;
-}
-
 .book-cover:hover{
   background-size:110%;
 }
@@ -210,17 +199,42 @@ body, .app {
   color:white;
 }
 
+/* modal */
+
+@media (max-width: 600px) {
+  .ReactModal__Content h1{
+    font-size:18px;
+  }
+}
+
+.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
 .modal-close{
-    border:0;
-    outline: none;
-    color:black;
-    background-color:lightgray;
-    cursor:pointer;
-    position: relative;
-    right:0;
-    top:0;
-    border-radius: 3px;
-    height:40px;
-    padding: 0 15px;
-    margin-top:10px;
+  border:0;
+  outline: none;
+  color:black;
+  background-color:lightgray;
+  cursor:pointer;
+  position: relative;
+  right:0;
+  top:0;
+  border-radius: 3px;
+  height:40px;
+  padding: 0 15px;
+  margin-top:10px;
+}
+
+
+/* loader */
+
+.loader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255,255,255,0.4);
+  z-index: 9999;
 }
