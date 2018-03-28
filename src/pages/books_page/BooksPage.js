@@ -1,122 +1,146 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import Loader from 'react-loader'
+import Modal from 'react-modal'
+
+import * as BooksAPI from '../../BooksAPI'
+
+const customStylesModal = {
+    content : {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width: '80%'
+    },
+    overlay: {
+        backgroundColor: 'rgba(0,0,0,0.4)'
+    }
+  }
+
+  const customStylesLoader = {
+    lines: 13,
+    length: 20,
+    width: 10,
+    radius: 30,
+    scale: 1.00,
+    corners: 1,
+    color: '#000',
+    opacity: 0.25,
+    rotate: 0,
+    direction: 1,
+    speed: 1,
+    trail: 60,
+    fps: 20,
+    zIndex: 2e9,
+    top: '50%',
+    left: '50%',
+    shadow: true,
+    hwaccel: false,
+    position: 'absolute' 
+  }
+
+Modal.setAppElement('#root')
 
 export default class BooksPage extends Component {
 
     state = {
-        showFakeElement: false,
-        fake_element: null
+        books: [],
+        isLoading: true,
+        isModalOpen: false,
+        modalContent: {}
     }
 
-    
-
-    showDescription = (element) => {
-        console.log(element.target.getBoundingClientRect().top)
-        console.log(element.target.getBoundingClientRect().left)
-        let fake_element = <div className="book-cover" style={{
-                    width: element.target.style.width,
-                    height: element.target.style.height,
-                    backgroundImage: element.target.style.backgroundImage, //element.target.style.backgroundImage
-                    backgroundSize: '100%',
-                    backgroundRepeat: 'no-repeat',
-                    position: 'absolute',
-                    zIndex: 1000,
-                    top: element.target.getBoundingClientRect().top,
-                    left: element.target.getBoundingClientRect().left
-                    }}>
-                </div>
-        this.setState({fake_element : fake_element})
-        this.setState({showFakeElement: true})
-        //Animation fake_element to scale in center
-        //Getting screen parameters
-        let screen_width = screen.width * 0.80
-        let screen_height = screen.height * 0.80
-        console.log(screen_width,screen_height)
-        console.log(fake_element)
-        //scale fake element to new values
-        let scale = Math.min(
-            screen_width / this.getNumberPixels(fake_element.props.style.width), 
-            screen_height / this.getNumberPixels(fake_element.props.style.height) 
-        )
-        console.log(scale)
-
-        //setting transition effect ease-in
-
-        fake_element.props.style.transition = 'all 1s '
-
-        //setting scale to fake element
-        //fake_element.props.style.transform = "scale(" + scale + ")"
-        fake_element.props.style.width = this.getNumberPixels(fake_element.props.style.width) * scale
-        fake_element.props.style.height = this.getNumberPixels(fake_element.props.style.height) * scale
-
-        //centering element in screen
-            // top: 50%;
-            // left: 50%;
-            // margin-top: height half negative;
-            // margin-left: width half negative;
-        fake_element.props.style.top = '50%'
-        fake_element.props.style.left = '50%'
-        fake_element.props.style.marginTop = (fake_element.props.style.height / 2) * -1
-        fake_element.props.style.marginLeft = (fake_element.props.style.width / 2) * -1
-
+    constructor(props){
+        super(props);
         
-
+        BooksAPI.getAll().then(books => {
+            this.setState({
+                books:books,
+                isLoading:false
+            })
+        })
     }
 
-    getNumberPixels = pixels => {
-        return parseFloat(pixels.replace('px'))
+    showDescription = (id) => {
+        let book = this.state.books.filter(e => e.id === id)[0]
+        this.openModal(book)
+    }
+
+    openModal = (item) => {
+        this.setState({modalContent: item, isModalOpen: true})
+    }
+
+    closeModal = () => {
+        this.setState({modalContent: {}, isModalOpen: false})
+    }
+
+    renderShelf = (shelf) => {
+        return this.state.books.filter(e => e.shelf === shelf).map(item => this.renderBook(item))
+    }
+
+    renderBook = (item) => {
+        return (
+            <li key={item.id}>
+                <div className="book">
+                <div className="book-top">
+                    <div className="book-cover" onClick={() => this.showDescription(item.id)} style={{ width: 128, height: 193, backgroundImage: 'url("'+item.imageLinks.thumbnail+'")' }}></div>
+                    <div className="book-shelf-changer">
+                    <select>
+                        <option value="none" disabled>Move to...</option>
+                        <option value="currentlyReading">Currently Reading</option>
+                        <option value="wantToRead">Want to Read</option>
+                        <option value="read">Read</option>
+                        <option value="none">None</option>
+                    </select>
+                    </div>
+                </div>
+                <div className="book-title">{item.title}</div>
+                <div className="book-authors">{item.authors.join(', ')}</div>
+                </div>
+            </li>
+        )
+    }
+
+    renderWidgets(){
+        return (
+            <div>
+                <Loader 
+                    loaded={!this.state.isLoading} 
+                    options={customStylesLoader}
+                    className="spinner" />
+                <Modal
+                    isOpen={this.state.isModalOpen}                    
+                    style={customStylesModal}
+                    contentLabel={this.state.modalContent.title}>
+                    <h1>{this.state.modalContent.title}</h1>
+                    <p>{this.state.modalContent.description}</p>
+                    <br />
+                    <button className='modal-close' onClick={this.closeModal}>Close</button>
+                </Modal>
+            </div>
+
+        )
     }
 
     render() {
+        
         return (
-            <div>
+            <div className='books'>
+                {this.renderWidgets()}
                 <div className="list-books">
                 <div className="list-books-title">
                 <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                    {this.state.showFakeElement && (this.state.fake_element)}
                 <div>
                     <div className="bookshelf">
                     <h2 className="bookshelf-title">Currently Reading</h2>
                     <div className="bookshelf-books">
                         <ol className="books-grid">
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" onClick={this.showDescription} style={{ width: 128, height: 193, backgroundImage: 'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">To Kill a Mockingbird</div>
-                            <div className="book-authors">Harper Lee</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url("http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">Ender's Game</div>
-                            <div className="book-authors">Orson Scott Card</div>
-                            </div>
-                        </li>
+                            {this.renderShelf('currentlyReading')}
                         </ol>
                     </div>
                     </div>
@@ -124,42 +148,7 @@ export default class BooksPage extends Component {
                     <h2 className="bookshelf-title">Want to Read</h2>
                     <div className="bookshelf-books">
                         <ol className="books-grid">
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url("http://books.google.com/books/content?id=uu1mC6zWNTwC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73pGHfBNSsJG9Y8kRBpmLUft9O4BfItHioHolWNKOdLavw-SLcXADy3CPAfJ0_qMb18RmCa7Ds1cTdpM3dxAGJs8zfCfm8c6ggBIjzKT7XR5FIB53HHOhnsT7a0Cc-PpneWq9zX&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">1776</div>
-                            <div className="book-authors">David McCullough</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: 'url("http://books.google.com/books/content?id=wrOQLV6xB-wC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72G3gA5A-Ka8XjOZGDFLAoUeMQBqZ9y-LCspZ2dzJTugcOcJ4C7FP0tDA8s1h9f480ISXuvYhA_ZpdvRArUL-mZyD4WW7CHyEqHYq9D3kGnrZCNiqxSRhry8TiFDCMWP61ujflB&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">Harry Potter and the Sorcerer's Stone</div>
-                            <div className="book-authors">J.K. Rowling</div>
-                            </div>
-                        </li>
+                            {this.renderShelf('wantToRead')}
                         </ol>
                     </div>
                     </div>
@@ -167,60 +156,7 @@ export default class BooksPage extends Component {
                     <h2 className="bookshelf-title">Read</h2>
                     <div className="bookshelf-books">
                         <ol className="books-grid">
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: 'url("http://books.google.com/books/content?id=pD6arNyKyi8C&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE70Rw0CCwNZh0SsYpQTkMbvz23npqWeUoJvVbi_gXla2m2ie_ReMWPl0xoU8Quy9fk0Zhb3szmwe8cTe4k7DAbfQ45FEzr9T7Lk0XhVpEPBvwUAztOBJ6Y0QPZylo4VbB7K5iRSk&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">The Hobbit</div>
-                            <div className="book-authors">J.R.R. Tolkien</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 174, backgroundImage: 'url("http://books.google.com/books/content?id=1q_xAwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE712CA0cBYP8VKbEcIVEuFJRdX1k30rjLM29Y-dw_qU1urEZ2cQ42La3Jkw6KmzMmXIoLTr50SWTpw6VOGq1leINsnTdLc_S5a5sn9Hao2t5YT7Ax1RqtQDiPNHIyXP46Rrw3aL8&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">Oh, the Places You'll Go!</div>
-                            <div className="book-authors">Seuss</div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="book">
-                            <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: 'url("http://books.google.com/books/content?id=32haAAAAMAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72yckZ5f5bDFVIf7BGPbjA0KYYtlQ__nWB-hI_YZmZ-fScYwFy4O_fWOcPwf-pgv3pPQNJP_sT5J_xOUciD8WaKmevh1rUR-1jk7g1aCD_KeJaOpjVu0cm_11BBIUXdxbFkVMdi&source=gbs_api")' }}></div>
-                                <div className="book-shelf-changer">
-                                <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="book-title">The Adventures of Tom Sawyer</div>
-                            <div className="book-authors">Mark Twain</div>
-                            </div>
-                        </li>
+                            {this.renderShelf('read')}
                         </ol>
                     </div>
                     </div>
