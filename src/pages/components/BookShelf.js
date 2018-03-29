@@ -3,12 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Book from './Book'
 
-const shelfTitles = [
-    {key: 'currentlyReading', value:'Currently Reading'},
-    {key: 'wantToRead', value:'Want to Read'},
-    {key: 'read', value:'Read'},
-    {key: 'search', value:'Books Found'}
-]
+import {shelfTitles} from '../../Constants'
 
 export default class BookShelf extends Component{
     render(){
@@ -17,12 +12,14 @@ export default class BookShelf extends Component{
                 <h2 className="bookshelf-title">{shelfTitles.filter(e => e.key === this.props.shelf)[0].value}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
-                        {this.props.books.filter(e => e.shelf === this.props.shelf).map(item => 
-                            <Book key={item.id} item={item} openModal={this.props.openModal} updateShelf={this.props.updateShelf} />
+                        {this.props.books.filter(e => e.shelf === this.props.shelf || this.props.mode === "search").map(item => 
+                            <Book key={item.id} item={item} openModal={this.props.openModal} updateShelf={this.props.updateShelf} mode={this.props.mode} />
                         )}
                         {
-                            this.props.books.filter(e => e.shelf === this.props.shelf).length === 0 &&(
-                           <p>There are no books in this section, <Link to='/search'>clique here</Link> to add a book.</p>
+                            this.props.books.filter(e => e.shelf === this.props.shelf || this.props.mode === "search").length === 0  &&(
+                                this.props.mode === "list" ? 
+                                    (<p>There are no books in this section, <Link to='/search'>click here</Link> to add a book.</p>) :
+                                    (<p>Nothing to show, try use the search input.</p>)
                         )
                         }                        
                     </ol>

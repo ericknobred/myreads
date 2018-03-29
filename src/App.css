@@ -166,6 +166,9 @@ body, .app {
 .book-cover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   background: #eee;
+}
+
+.book-openModal{
   background-size:100%;
   background-position: top center;
   transition: background-size 0.1s ease-in;
@@ -176,17 +179,19 @@ body, .app {
   display: table;
   text-align: center;
 }
+
+
 .book-cover-title {
   padding: 20px 10px 0;
   text-align: center;
   font-size: 0.8em;
 }
 
-.book-cover:hover{
+.book-openModal:hover{
   background-size:110%;
 }
 
-.book-cover:hover::after{
+.book-openModal:hover::after{
   position: relative;
   width: 128px;
   height: 193px;
@@ -226,6 +231,7 @@ body, .app {
   height:40px;
   padding: 0 15px;
   margin-top:10px;
+  float:right;
 }
 
 
@@ -239,4 +245,49 @@ body, .app {
   left: 0;
   background: rgba(255,255,255,0.4);
   z-index: 9999;
+}
+
+/* chosen */
+
+.chosen .Select-input{
+  height:53px;
+}
+
+.chosen .Select-control{
+  border-radius: 0;
+  border:0;
+  height:53px;
+}
+
+.chosen .Select-control .Select-placeholder, .chosen .Select-control .Select-value{
+  line-height: 53px !important;
+}
+
+.chosen .Select-menu-outer{
+  border:0;
+  width:calc(100% + 50px);
+  position: relative;
+  left:0;
+  right:0;
+  border-radius: 0;
+  margin-left:-50px;
+  padding-left:50px;
+}
+.chosen .Select-input > input{
+  height:33px;
+}
+
+.chosen .Select-option {
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #666666;
+  cursor: pointer;
+  display: block;
+  padding: 8px 10px;
+  position: relative;
+  
+}
+.chosen .Select-option:last-child {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }

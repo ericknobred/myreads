@@ -11,10 +11,10 @@ export default class Book extends Component{
              <li draggable="true">
                 <div className="book">
                     <div className="book-top">
-                        <div className="book-cover" onClick={() => this.props.openModal(this.props.item)} style={{ width: 128, height: 193, backgroundImage: 'url("'+this.props.item.imageLinks.thumbnail+'")' }}></div>
+                        <div className={"book-cover "+ (this.props.openModal ? "book-openModal" : "")} onClick={() => (this.props.openModal ? this.props.openModal(this.props.item): false)} style={{ width: 128, height: 193, backgroundImage: 'url("'+this.props.item.imageLinks.thumbnail+'")' }}></div>
                         <div className="book-shelf-changer">
                         <select defaultValue={this.props.item.shelf} onChange={this.handlerSelectShelf}>
-                            <option value="none" disabled>Move to...</option>
+                            <option value="search" selected="true" disabled>{this.props.mode === "list" ? "Move to..." : "Add to..."}</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>

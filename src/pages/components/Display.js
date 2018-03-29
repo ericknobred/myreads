@@ -8,7 +8,7 @@ export default class Display extends Component{
             <div>
                 {
                     this.props.shelfs.map((item,index) => {
-                        return <BookShelf key={index} books={this.props.books} shelf={item} openModal={this.props.openModal} updateShelf={this.props.updateShelf} />
+                        return <BookShelf key={index} books={this.props.books} shelf={item} openModal={this.props.openModal} updateShelf={this.props.updateShelf} mode={this.props.mode} />
                     })
                 } 
             </div>

@@ -4,14 +4,8 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from '../../BooksAPI'
 import CustomLoader from '../components/CustomLoader'
 import Display from '../components/Display'
-import ViewDescriptionModal from './ViewDescriptionModal'
-
-
-const shelfsDisplay = [
-    'currentlyReading',
-    'wantToRead',
-    'read'
-]
+import ViewDescriptionModal from '../components/ViewDescriptionModal'
+import {shelfsDisplay} from '../../Constants'
 
 export default class BooksPage extends Component {
 
@@ -23,7 +17,7 @@ export default class BooksPage extends Component {
     }
 
     constructor(props){
-        super(props);
+        super(props)
         
         BooksAPI.getAll().then(books => {
             this.setState({
@@ -67,7 +61,6 @@ export default class BooksPage extends Component {
     }
 
     render() {
-        
         return (
             <div className='books'>
                 {this.renderWidgets()}
@@ -77,7 +70,7 @@ export default class BooksPage extends Component {
                     </div>
                     <div className="list-books-content">
                         <div>
-                            <Display books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} updateShelf={this.updateShelf} />
+                            <Display books={this.state.books} shelfs={shelfsDisplay} openModal={this.openModal} updateShelf={this.updateShelf}  mode="list" />
                         </div>
                     </div>
                     <div className="open-search">
