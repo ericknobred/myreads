@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Book from './Book'
 
-import {shelfTitles} from '../../Constants'
+import {shelfTitles} from '../Constants'
 
 export default class BookShelf extends Component{
     render(){

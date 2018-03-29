@@ -3,10 +3,17 @@ export const shelfTitles = [
     {key: 'currentlyReading', value:'Currently Reading'},
     {key: 'wantToRead', value:'Want to Read'},
     {key: 'read', value:'Read'},
-    {key: 'search', value:'Books'}
+    {key: 'search', value:'Books'},
+    {key: 'none', value:'None'}
 ]
 export const shelfsDisplay = [
     'currentlyReading',
     'wantToRead',
     'read'
 ]
+
+export const alertOptions = {
+    effect: 'bouncyflip',
+    offset: 80,
+    timeout: 3000
+}

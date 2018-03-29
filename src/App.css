@@ -215,7 +215,7 @@ body, .app {
 }
 
 .ReactModal__Body--open {
-  overflow-y: hidden;
+  overflow-y: hidden;  
 }
 
 .modal-close{

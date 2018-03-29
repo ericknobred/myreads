@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Select from 'react-select'
-import 'react-select/dist/react-select.css'
 
-import CustomLoader from '../components/CustomLoader'
-import Display from '../components/Display'
-import {searchTerms} from '../../Constants'
+import CustomAlert from '../../components/CustomAlert'
+import CustomLoader from '../../components/CustomLoader'
+import Display from '../../components/Display'
+
+import {searchTerms, shelfTitles} from '../../Constants'
+
 import * as BooksAPI from '../../BooksAPI'
 
 export default class SearchPage extends Component {
@@ -17,31 +19,43 @@ export default class SearchPage extends Component {
             label: item
         }}),
         books: [],
-        isLoading: false
+        isLoading: false,
+        queryUrl: window.location.pathname.split('/')[2]
     }
 
-    
-    handleChange = (selectedOption) => {
+    componentDidMount() {
+        if(this.state.queryUrl)
+            this.searchBooks({value: this.state.queryUrl})
+    }
+
+    searchBooks = (selectedOption) => {
         this.setState({ selectedOption, isLoading: true })
-        BooksAPI.search(selectedOption.value).then(books => {
+        history.pushState({}, "", '/search/'+ selectedOption.value);
+        BooksAPI.search(selectedOption.value).then(books => {            
             this.setState({books: books, isLoading: false})
-            console.log(this.state.books)
+        }).catch(err =>{
+            this.setState({isLoading: false})
+            CustomAlert.error('Ocorreu um erro ao buscar os livros. Tente novamente em alguns instantes.')
         })
     }
-
     updateShelf = (book, shelf) => {
         this.setState({isLoading:true}) 
         BooksAPI.update(book, shelf).then(() => {
             this.setState({books: this.state.books.filter(e => e.id !== book.id), isLoading:false})
+            let textShelf = shelfTitles.filter(e => e.key === shelf)[0].value
+            CustomAlert.success('Moved to ' + textShelf + ' shelf.')
         })     
     }
+
+
 
     render() {
         const { selectedOption } = this.state
         const value = selectedOption && selectedOption.value
+        
         return (
             <div>
-                <CustomLoader isLoading={this.state.isLoading} />
+                <CustomLoader loading={this.state.isLoading} />
                 <div className="search-books">
                 <div className="search-books-bar">
                 <Link to='/' className="close-search">Close</Link>
@@ -49,8 +63,8 @@ export default class SearchPage extends Component {
                     <Select
                         className='chosen'
                         name="query"
-                        value={value}
-                        onChange={this.handleChange}
+                        value={!value ? this.state.queryUrl : value}
+                        onChange={this.searchBooks}
                         placeholder="Search by title or author options"
                         options={this.state.chosenOptions}
                     />

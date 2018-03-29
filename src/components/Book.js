@@ -6,6 +6,13 @@ export default class Book extends Component{
         this.props.updateShelf(this.props.item, element.target.value)
     }
 
+    componentWillMount(){
+        if(!this.props.item.authors)
+            this.props.item.authors = ["Anonymous"]        
+        if(!this.props.item.imageLinks.thumbnail)
+            this.props.item.imageLinks.thumbnail = 'http://via.placeholder.com/123x193'
+    }
+
     render(){
         return(
              <li draggable="true">
@@ -14,7 +21,7 @@ export default class Book extends Component{
                         <div className={"book-cover "+ (this.props.openModal ? "book-openModal" : "")} onClick={() => (this.props.openModal ? this.props.openModal(this.props.item): false)} style={{ width: 128, height: 193, backgroundImage: 'url("'+this.props.item.imageLinks.thumbnail+'")' }}></div>
                         <div className="book-shelf-changer">
                         <select defaultValue={this.props.item.shelf} onChange={this.handlerSelectShelf}>
-                            <option value="search" selected="true" disabled>{this.props.mode === "list" ? "Move to..." : "Add to..."}</option>
+                            <option value="search" disabled>{this.props.mode === "list" ? "Move to..." : "Add to..."}</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>

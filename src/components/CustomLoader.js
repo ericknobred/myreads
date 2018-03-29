@@ -25,10 +25,11 @@ const customStylesLoader = {
 
 
 export default class CustomLoader extends Component {
+
     render(){
         return (
             <Loader 
-                    loaded={!this.props.isLoading} 
+                    loaded={!this.props.loading} 
                     options={customStylesLoader}
                     className="spinner" />
         )

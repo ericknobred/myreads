@@ -2,10 +2,14 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import * as BooksAPI from '../../BooksAPI'
-import CustomLoader from '../components/CustomLoader'
-import Display from '../components/Display'
-import ViewDescriptionModal from '../components/ViewDescriptionModal'
-import {shelfsDisplay} from '../../Constants'
+
+import Display from '../../components/Display'
+import ViewDescriptionModal from '../../components/ViewDescriptionModal'
+import {shelfsDisplay, shelfTitles} from '../../Constants'
+
+import CustomAlert from '../../components/CustomAlert'
+import CustomLoader from '../../components/CustomLoader'
+
 
 export default class BooksPage extends Component {
 
@@ -16,9 +20,7 @@ export default class BooksPage extends Component {
         modalContent: {}
     }
 
-    constructor(props){
-        super(props)
-        
+    componentDidMount() {
         BooksAPI.getAll().then(books => {
             this.setState({
                 books:books,
@@ -38,7 +40,7 @@ export default class BooksPage extends Component {
     renderWidgets(){
         return (
             <div id='widgets'>
-                <CustomLoader isLoading={this.state.isLoading} />
+                <CustomLoader loading={this.state.isLoading} />
                 <ViewDescriptionModal
                     isOpen={this.state.isModalOpen}                    
                     book={this.state.modalContent}
@@ -55,8 +57,10 @@ export default class BooksPage extends Component {
                 if(item.id === book.id)
                     item.shelf = shelf
                 return item
-            })        
+            })
             this.setState({books: newBooks,isLoading:false})
+            let textShelf = shelfTitles.filter(e => e.key === shelf)[0].value
+            CustomAlert.success('Moved to ' + textShelf + ' shelf.')
         })        
     }
 
