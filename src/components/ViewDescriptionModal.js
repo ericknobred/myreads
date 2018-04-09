@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 
 
@@ -22,7 +23,7 @@ const customStylesModal = {
   }
 
 Modal.setAppElement('#root')
-export default class ViewDescriptionModal extends Component {
+class ViewDescriptionModal extends Component {
 
    render() {
         return (
@@ -39,3 +40,11 @@ export default class ViewDescriptionModal extends Component {
         )
     }
 }
+
+ViewDescriptionModal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    book: PropTypes.object.isRequired,
+    closeModal: PropTypes.func.isRequired
+}
+
+export default ViewDescriptionModal

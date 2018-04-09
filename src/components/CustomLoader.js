@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Loader from 'react-loader'
+import PropTypes from 'prop-types'
 
 const customStylesLoader = {
     lines: 13,
@@ -24,7 +25,7 @@ const customStylesLoader = {
   }
 
 
-export default class CustomLoader extends Component {
+class CustomLoader extends Component {
 
     render(){
         return (
@@ -35,3 +36,9 @@ export default class CustomLoader extends Component {
         )
     }
 }
+
+CustomLoader.propTypes = {
+    loading: PropTypes.bool.isRequired
+}
+
+export default CustomLoader

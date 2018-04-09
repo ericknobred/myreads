@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import Book from './Book'
 
 import {shelfTitles} from '../Constants'
 
-export default class BookShelf extends Component{
+class BookShelf extends Component{
     render(){
         return (
             <div className="bookshelf">
@@ -28,3 +29,13 @@ export default class BookShelf extends Component{
         )
     }
 }
+
+BookShelf.propTypes = {
+    books: PropTypes.array.isRequired,
+    shelf: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    openModal: PropTypes.func,
+    updateShelf: PropTypes.func.isRequired
+}
+
+export default BookShelf

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-export default class Book extends Component{
+class Book extends Component{
 
     handlerSelectShelf = (element) => {
         this.props.updateShelf(this.props.item, element.target.value)
@@ -36,3 +37,12 @@ export default class Book extends Component{
         )
     }
 }
+
+Book.propTypes = {
+    item: PropTypes.object.isRequired,
+    openModal: PropTypes.func,
+    mode: PropTypes.string.isRequired,
+    updateShelf: PropTypes.func.isRequired
+}
+
+export default Book
