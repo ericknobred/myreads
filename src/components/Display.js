@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import BookShelf from './BookShelf'
 
-export default class Display extends Component{
+class Display extends Component{
     render(){
         return (
             <div>
@@ -15,3 +16,14 @@ export default class Display extends Component{
         )
     }
 }
+
+
+Display.propTypes = {
+    books: PropTypes.array.isRequired,
+    shelfs: PropTypes.array.isRequired,
+    mode: PropTypes.string.isRequired,
+    openModal: PropTypes.func,
+    updateShelf: PropTypes.func.isRequired
+}
+
+export default Display

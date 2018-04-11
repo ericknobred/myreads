@@ -1,5 +1,6 @@
 import React from 'react'
 import Loader from 'react-loader'
+import PropTypes from 'prop-types'
 
 const customStylesLoader = {
     lines: 13,
@@ -23,8 +24,7 @@ const customStylesLoader = {
     position: 'absolute' 
   }
 
-
-export default function CustomLoader (props) {
+function CustomLoader (props) {
     return (
         <Loader 
                 loaded={!props.loading} 
@@ -32,3 +32,10 @@ export default function CustomLoader (props) {
                 className="spinner" />
     )
 }
+
+CustomLoader.propTypes = {
+    loading: PropTypes.bool.isRequired
+}
+
+export default CustomLoader
+
