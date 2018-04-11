@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Loader from 'react-loader'
 
 const customStylesLoader = {
@@ -24,14 +24,11 @@ const customStylesLoader = {
   }
 
 
-export default class CustomLoader extends Component {
-
-    render(){
-        return (
-            <Loader 
-                    loaded={!this.props.loading} 
-                    options={customStylesLoader}
-                    className="spinner" />
-        )
-    }
+export default function CustomLoader (props) {
+    return (
+        <Loader 
+                loaded={!props.loading} 
+                options={customStylesLoader}
+                className="spinner" />
+    )
 }

@@ -19,11 +19,18 @@ export default class SearchPage extends Component {
             label: item
         }}),
         books: [],
-        isLoading: false,
-        queryUrl: window.location.pathname.split('/')[2]
+        isLoading: true,
+        queryUrl: window.location.pathname.split('/')[2],
+        booksOnShelf: []
     }
 
     componentDidMount() {
+        BooksAPI.getAll().then(books => {
+            this.setState({
+                booksOnShelf:books,
+                isLoading:false
+            })
+        })
         if(this.state.queryUrl)
             this.searchBooks({value: this.state.queryUrl})
     }
@@ -31,11 +38,20 @@ export default class SearchPage extends Component {
     searchBooks = (selectedOption) => {
         this.setState({ selectedOption, isLoading: true })
         history.pushState({}, "", '/search/'+ selectedOption.value);
-        BooksAPI.search(selectedOption.value).then(books => {            
+        BooksAPI.search(selectedOption.value).then(books => {      
+            books = books.map(item => {
+                let book = this.state.booksOnShelf.filter(e => e.id === item.id)[0]
+                if(book)
+                    item.shelf = book.shelf
+                else
+                    item.shelf = 'none'
+                return item
+            })
+            console.log(books)
             this.setState({books: books, isLoading: false})
         }).catch(err =>{
             this.setState({isLoading: false})
-            CustomAlert.error('Ocorreu um erro ao buscar os livros. Tente novamente em alguns instantes.')
+            CustomAlert().error('Ocorreu um erro ao buscar os livros. Tente novamente em alguns instantes.')
         })
     }
     updateShelf = (book, shelf) => {
@@ -43,7 +59,7 @@ export default class SearchPage extends Component {
         BooksAPI.update(book, shelf).then(() => {
             this.setState({books: this.state.books.filter(e => e.id !== book.id), isLoading:false})
             let textShelf = shelfTitles.filter(e => e.key === shelf)[0].value
-            CustomAlert.success('Moved to ' + textShelf + ' shelf.')
+            CustomAlert().success('Moved to ' + textShelf + ' shelf.')
         })     
     }
 

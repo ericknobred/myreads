@@ -60,7 +60,7 @@ export default class BooksPage extends Component {
             })
             this.setState({books: newBooks,isLoading:false})
             let textShelf = shelfTitles.filter(e => e.key === shelf)[0].value
-            CustomAlert.success('Moved to ' + textShelf + ' shelf.')
+            CustomAlert().success('Moved to ' + textShelf + ' shelf.')
         })        
     }
 

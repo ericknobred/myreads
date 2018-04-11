@@ -274,7 +274,9 @@ body, .app {
   padding-left:50px;
 }
 .chosen .Select-input > input{
-  height:33px;
+  height:22px;
+  font-size:16px;
+  margin-left:-10px;
 }
 
 .chosen .Select-option {
@@ -290,4 +292,8 @@ body, .app {
 .chosen .Select-option:last-child {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+.chosen .Select-option:hover{
+  background:lightgray;
 }

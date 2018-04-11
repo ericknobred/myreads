@@ -9,8 +9,8 @@ export default class Book extends Component{
     componentWillMount(){
         if(!this.props.item.authors)
             this.props.item.authors = ["Anonymous"]        
-        if(!this.props.item.imageLinks.thumbnail)
-            this.props.item.imageLinks.thumbnail = 'http://via.placeholder.com/123x193'
+        if(!this.props.item.imageLinks)
+            this.props.item.imageLinks = { thumbnail : 'http://via.placeholder.com/123x193' }
     }
 
     render(){
